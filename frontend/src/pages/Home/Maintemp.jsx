@@ -1,20 +1,9 @@
 import React, { use, useEffect, useState } from 'react'
+import courseInfo from '../Utils/Utils'
 import axios from 'axios';
-import { StoreContext } from '../../context/StoreContext';
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 export default function Main() {
 
-    const navigate = useNavigate()
-
-    const contextValue = useContext(StoreContext)
-    const { cartQuantity, setCartQuantity } = contextValue;
-
     const [courses, setCourses] = useState([]);
-
-    const [cartItem, setCartItem] = useState([]);
-    const [cartQ, setCartQ] = useState(0);
-
     async function fetchCourseData() {
         try {
             const response = await axios.get("http://localhost:8000/api/getcourses");
@@ -27,31 +16,16 @@ export default function Main() {
         }
     }
 
-
     useEffect(() => {
         fetchCourseData();
-
-        const storedCart = JSON.parse(localStorage.getItem("cartItem")) || [];
-        setCartItem(storedCart);
-        setCartQ(storedCart.length);
     }, []);
 
-    function debaunce(fun, delay) {
-        let timeoutid;
-        return function (...args) {
-            if (timeoutid) {
-                clearTimeout(timeoutid);
-            }
-            timeoutid = setTimeout(() => {
-                fun(...args);
-            }, delay);
-        }
-    }
+    const [searchTerm, setSearchTerm] = useState("");
+    // Usage
 
-    async function search(event) {
-        // event.preventDefault();
-        const response = await axios.post("http://localhost:8000/api/searchCourse", { searchTerm2: event }).then((response) => {
-            console.log(event);
+    async function search() {
+        const response = await axios.post("http://localhost:8000/api/searchCourse", { searchTerm2: searchTerm }).then((response) => {
+            console.log(searchTerm);
             setCourses(response.data.coursedata);
             console.log("Course data:", response.data.coursedata)
         }).catch((error) => {
@@ -59,17 +33,8 @@ export default function Main() {
         });
     }
 
-    function handleAddToCart(course) {
-        setCartQuantity(cartQuantity+1)
-        setCartItem(prev => {
-            const updated = [...prev, course];
-            localStorage.setItem("cartItem", JSON.stringify(updated));
-            setCartQ(updated.length);
-            return updated;
-        });
-    }
 
-    const debauncing = debaunce(search, 400);
+
     return (
         <div>
             <main className="pt-32 text-center">
@@ -77,11 +42,11 @@ export default function Main() {
                 <input type="text"
                     className="border border-white-300 rounded-md p-2 mt-4 w-1/3 "
                     placeholder="Search courses..."
-                    onChange={(e) => debauncing(e.target.value)}
-
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    
                 />
                 <p className="mt-4 text-slate-500">Click Log In to see the login in your self!</p>
-
                 <div className="flex flex-wrap justify-center gap-8 px-6 py-10">
                     {Array.isArray(courses) && courses.map((course, index) => (
                         <div
@@ -112,13 +77,20 @@ export default function Main() {
                                 <div className="flex flex-wrap gap-2 mt-2 text-xs text-gray-500">
 
                                     <span className="border px-2 py-0.5 rounded-full">
-                                        {course.rating}  ⭐
+                                        {course.rating}  ⭐ rating
                                     </span>
                                     <span className="border px-2 py-0.5 rounded-full">
                                         {course.rating_count} rating count
                                     </span>
-
-
+                                    <span className="border px-2 py-0.5 rounded-full">
+                                        {course.totalHours} 64 hours
+                                    </span>
+                                    <span className="border px-2 py-0.5 rounded-full">
+                                        {course.lectures}100 lectures
+                                    </span>
+                                    <span className="border px-2 py-0.5 rounded-full">
+                                        Beginner
+                                    </span>
                                 </div>
 
                                 {/* Price */}
@@ -126,17 +98,13 @@ export default function Main() {
                                     <span className="text-lg font-bold text-gray-900">
                                         {course.price}
                                     </span>
+                                    <span className="text-sm text-gray-400 line-through">
+                                        {course.oldPrice}
+                                    </span>
                                 </div>
 
                                 {/* CTA */}
-
-                                <button className='bg-indigo-600 text-white hover:bg-indigo-700 mr-4'>Buy now</button>
-                                <button
-                                    className='bg-indigo-600 text-white hover:bg-indigo-700'
-                                    onClick={() => handleAddToCart(course)}
-                                >add to cart
-                                </button>
-
+                                <button className='bg-indigo-600 text-white hover:bg-indigo-700'>Buy now</button>
                             </div>
                         </div>
                     ))}

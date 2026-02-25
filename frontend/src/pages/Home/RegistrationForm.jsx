@@ -5,16 +5,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
-
 export default function RegistrationForm() {
-
     console.log("RegistrationForm");
     const contextValue = useContext(StoreContext);
-    const { isLogin , setToken } = contextValue;
+    const { isLogin, setToken } = contextValue;
     const navigate = useNavigate();
     const notify = (e) => toast('Here is your toast.' + e);
     const notify1 = () => toast('Register successfully! Please log in to continue.');
-
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -58,7 +55,7 @@ export default function RegistrationForm() {
 
     const [verifyEmail, setVerifyEmail] = useState("");
     const [verifyPassword, setVerifyPassword] = useState("");
-   
+
     async function triggerLoginApi(verifyEmail, verifyPassword, e) {
         e.preventDefault();
         const data = {
@@ -77,11 +74,11 @@ export default function RegistrationForm() {
 
             console.log("token:", response.data.token);
             setToken(response.data.token)
-            console.log( response.data); // Check token value after login
+            console.log(response.data); // Check token value after login
             console.log("User name:", response.data.user.name);
-            
             setVerifyEmail("");
             setVerifyPassword("");
+
         })
             .catch((error) => {
                 if (error.response) {
@@ -90,6 +87,7 @@ export default function RegistrationForm() {
                 } else {
                     console.log("Network error:", error.message);
                 }
+                navigate("/");
             });
 
         navigate("/profile");

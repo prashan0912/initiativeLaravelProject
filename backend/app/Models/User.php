@@ -67,4 +67,18 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+   
 }

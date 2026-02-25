@@ -17,6 +17,9 @@ function StoreContextProvider(props) {
     const [toggle, setToggle] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
+    const [cartQuantity , setCartQuantity] = useState(0) 
+
+    const [profileLogedIn, setProfileLoggedIn] = useState(false);
 
     const [token, setToken] = useState(cookies.get('token') || null); // Initialize token state with cookie value or null
     
@@ -30,7 +33,10 @@ function StoreContextProvider(props) {
         isOpen,
         setIsOpen,
         isLogin, setIsLogin,
-        token , setToken
+        token , setToken,
+        profileLogedIn, setProfileLoggedIn,
+        cartQuantity , setCartQuantity
+        
     }
 
 

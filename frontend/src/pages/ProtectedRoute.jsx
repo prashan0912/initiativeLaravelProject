@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children }) {
     const [status, setStatus] = useState(null);
 
     const contextValue = useContext(StoreContext);
-    const { token } = contextValue;
+    const { token ,setProfileLoggedIn} = contextValue;
 
 
     console.log("Token from cookie:", token);
@@ -29,6 +29,7 @@ export default function ProtectedRoute({ children }) {
                 console.log("protectedRoute data:", response.data);
                 setStatus(true); // Assuming the backend sends an 'authenticated' field in the response
                 console.log(response.data.status)
+                setProfileLoggedIn(true);
             })
             .catch((error) => {
                 console.error("Error fetching profile:", error);

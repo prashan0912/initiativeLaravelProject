@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\cartController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,3 +20,7 @@ Route::group(["middleware" => "auth:sanctum"], function () {
 Route::get("/getcourses", [CourseController::class, "getcourses"]);
 
 Route::post("/addcourse", [CourseController::class, "addcourse"]);
+
+Route::post("/searchCourse", [CourseController::class, "searchCourse"]);
+
+Route ::post("/getcart",[cartController::class,"getCart"]);

@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { StoreContext } from '../context/StoreContext'
 import Navbar from './Home/Navbar';
 import LoginForm from './Home/LoginForm';
+import Footer from './Footer';
 import Main from './Home/Main';
 export default function Home() {
     const contextValue = useContext(StoreContext);
@@ -15,6 +16,7 @@ export default function Home() {
                 <LoginForm />
             )}
             <Main />
+            <Footer />
         </div>
     );
 }

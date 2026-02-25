@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Course;
 use Illuminate\Http\Request;
 
@@ -38,6 +37,18 @@ class CourseController extends Controller
             "coursedata" => $course
         ], 200);
         // return "get courses";
+    }
+
+    public function searchCourse(Request $request)
+    {
+        $searchTerm = $request->searchTerm2;
+        
+        $courses = Course::where('title', 'like', "%$searchTerm%")->get();
+
+        return response()->json([
+            "result" => "success",
+            "coursedata" => $courses
+        ], 200);
     }
 
 }

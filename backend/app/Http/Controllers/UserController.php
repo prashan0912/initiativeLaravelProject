@@ -6,6 +6,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Faker\Provider\Person;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -16,13 +17,12 @@ class UserController extends Controller
         // $user = $request->all();
         $user = $request->validated();
 
-
-
         //iske like aalag se service layer banega or usme ye logic jayega
         // $user["password"] = bcrypt($user["password"]);
         $user['password'] = Hash::make($user['password']);
 
         $user = User::create($user);
+       
 
         return response()->json([
             "result" => "success",
@@ -56,6 +56,8 @@ class UserController extends Controller
 
         // Optional: Delete old tokens for security
         $user->tokens()->delete();
+
+        // $request->session()->regenerate();
 
         $token = $user->createToken('auth-token', ['*'], now()->addHours(2))->plainTextToken;
 
@@ -123,7 +125,8 @@ class UserController extends Controller
     {
         // echo"request".$request;
         $token = PersonalAccessToken::findToken($request->bearerToken());
-        // cookie()->queue(cookie()->forget('token'));
+
+        Auth::logout();
         if ($token) {
             $token->delete();
         }
